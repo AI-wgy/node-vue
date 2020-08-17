@@ -3,10 +3,19 @@
     <div class="about">
         <h1>{{id ? '编辑' : '新建' }}分类</h1>
         <el-form label-width="120px" @submit.native.prevent = "save">
+            <el-form-item label="上级分类">
+                <el-select v-model="model.parent">
+                    <!-- 显示的是分类名称，但是存储的数据是ID -->
+                    <el-option v-for="item in parents" :key="item._id"
+                    :label="item.name" :value="item._id"></el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="名称">
                 <el-input v-model="model.name"></el-input>
             </el-form-item>
             <el-form-item>
+                <!-- 创建子分类，保存的时候数据应该存储在数据库里，需要在模型当中添加一个父级分类的字段
+                否则即使添加了分类，数据也不会存在数据库里，子分类和父分类也没有任何的关联 -->
                 <el-button  type="primary" native-type="submit">保存</el-button>
             </el-form-item>
         </el-form>
@@ -23,7 +32,8 @@ export default {
 
     data(){
         return{
-            model: {}
+            model: {} ,
+            parents: []
         }
     },
 
@@ -54,12 +64,18 @@ export default {
             //这边需要一个接口，到后端定义
             const res = await this.$http.get(`categories/${this.id}`)
             this.model = res.data
+        },
+        async fetchParents(){
+            //定义上级分类接口的引用,可以直接用分类列表的接口，上级分类本身数据就是来自于分类列表
+            const res = await this.$http.get(`categories`)
+            this.parents = res.data
         }
     },
     //跳转到编辑列表的时候，应该要显示一个分类的详情，不然不知道原来的值是什么，就不好进行下一步的编辑
     created(){
         //前面这个id满足之后执行后面的这个方法
         this.id && this.fetch()
+        this.fetchParents()
     }
 }   
 </script>
