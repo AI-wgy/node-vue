@@ -31,7 +31,8 @@ module.exports = app => {
 
     //分类列表
     router.get('/categories', async (req, res) => {
-        const items = await Category.find().limit(10)
+        //populate表示关联取出什么东西，中间填一个字段，当数据库中又关联字段，想要查出这个字段就可以用populate
+        const items = await Category.find().populate('parent').limit(10)
         res.send(items)
     })
 

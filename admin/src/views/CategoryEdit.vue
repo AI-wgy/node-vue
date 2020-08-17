@@ -11,7 +11,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="名称">
-                <el-input v-model="model.name"></el-input>
+                <el-input v-focus v-model="model.name"></el-input>
             </el-form-item>
             <el-form-item>
                 <!-- 创建子分类，保存的时候数据应该存储在数据库里，需要在模型当中添加一个父级分类的字段
@@ -24,7 +24,7 @@
 
 <script>
 export default {
-    //接收id
+    //props接收id
     //好处：页面可以跟路由尽可能解耦，不用去写很长的this,router,pramas,id 的写法
     props: {
         id: {}
@@ -36,6 +36,17 @@ export default {
             parents: []
         }
     },
+
+    directives: {
+        //注册一个局部自定义指令v-focus
+        focus: {
+            //指令的定义
+            inserted:function(el){
+                //聚焦元素
+                el.querySelector('input').focus()
+            }
+        }
+    } ,
 
     methods:{
         async save(){
