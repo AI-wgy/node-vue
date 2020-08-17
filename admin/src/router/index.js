@@ -20,6 +20,13 @@ Vue.use(VueRouter)
       {
         path: '/categories/list', 
         component: CategoryList 
+      },
+      {
+        //表示把/categories/edit 任何的URL参数，比如id，都注入到这个CategoryEdit页面里面，
+        //则在这个页面就可以直接使用这个变量id
+        path: '/categories/edit/:id', 
+        component: CategoryEdit ,
+        props: true
       }
     ]
   },

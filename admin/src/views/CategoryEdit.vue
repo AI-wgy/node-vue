@@ -1,7 +1,7 @@
 <!-- 分类的创建 -->
 <template>
     <div class="about">
-        <h1>新建分类</h1>
+        <h1>{{id ? '编辑' : '新建' }}分类</h1>
         <el-form label-width="120px" @submit.native.prevent = "save">
             <el-form-item label="名称">
                 <el-input v-model="model.name"></el-input>
@@ -15,15 +15,30 @@
 
 <script>
 export default {
+    //接收id
+    //好处：页面可以跟路由尽可能解耦，不用去写很长的this,router,pramas,id 的写法
+    props: {
+        id: {}
+    },
+
     data(){
         return{
             model: {}
         }
     },
+
     methods:{
-        save(){
-            console.log('save')
-            this.$http.post('categories', this.model)
+        async save(){
+            //因为新建分类和编辑分类不同，所以在保存的时候做一个判断，
+            //当有ID的时候用put方法提交到另一个接口（去后端定义新的接口）
+            let res    // eslint-disable-line no-unused-vars
+            if (this.id){
+                res = await this.$http.put(`categories/${this.id}`, this.model)
+            } else {
+                res = await this.$http.post('categories', this.model)
+            }
+            // console.log('save')
+            // this.$http.post('categories', this.model)
             //一般在这后面用.then方法  这里可以尝试使用async/await方法，
             //同样返回的也是一个promise,就可以把异步回调函数的写法，改成类似同步的
 
@@ -34,7 +49,17 @@ export default {
                 type:'success',
                 message:'保存成功'
             })
+        },
+        async fetch(){
+            //这边需要一个接口，到后端定义
+            const res = await this.$http.get(`categories/${this.id}`)
+            this.model = res.data
         }
+    },
+    //跳转到编辑列表的时候，应该要显示一个分类的详情，不然不知道原来的值是什么，就不好进行下一步的编辑
+    created(){
+        //前面这个id满足之后执行后面的这个方法
+        this.id && this.fetch()
     }
-}
+}   
 </script>

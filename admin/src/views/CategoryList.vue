@@ -6,8 +6,10 @@
         <el-table-column prop="_id" label="ID" width="240"></el-table-column>
         <el-table-column prop="name" label="分类名称" ></el-table-column>
         <el-table-column fixed="right" label="操作" width="180">
-          <template>
-            <el-button type="text" size="small">编辑</el-button>
+          <template slot-scope="scope">
+            <!-- scope.row表示当前这一行数据 -->
+            <el-button type="text" size="small" 
+            @click="$router.push(`/categories/edit/${scope.row._id}`)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
