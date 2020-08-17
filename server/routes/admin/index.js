@@ -21,6 +21,14 @@ module.exports = app => {
         res.send(model)
     })
 
+    //删除分类接口
+    router.delete('/categories/:id', async (req, res) => {
+        const model = await Category.findByIdAndDelete(req.params.id, req.body)
+        res.send({
+            success: true
+        })
+    })
+
     //分类列表
     router.get('/categories', async (req, res) => {
         const items = await Category.find().limit(10)
