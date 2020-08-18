@@ -54,9 +54,9 @@ export default {
             //当有ID的时候用put方法提交到另一个接口（去后端定义新的接口）
             let res    // eslint-disable-line no-unused-vars
             if (this.id){
-                res = await this.$http.put(`categories/${this.id}`, this.model)
+                res = await this.$http.put(`rest/categories/${this.id}`, this.model)
             } else {
-                res = await this.$http.post('categories', this.model)
+                res = await this.$http.post('rest/categories', this.model)
             }
             // console.log('save')
             // this.$http.post('categories', this.model)
@@ -73,12 +73,12 @@ export default {
         },
         async fetch(){
             //这边需要一个接口，到后端定义
-            const res = await this.$http.get(`categories/${this.id}`)
+            const res = await this.$http.get(`rest/categories/${this.id}`)
             this.model = res.data
         },
         async fetchParents(){
             //定义上级分类接口的引用,可以直接用分类列表的接口，上级分类本身数据就是来自于分类列表
-            const res = await this.$http.get(`categories`)
+            const res = await this.$http.get(`rest/categories`)
             this.parents = res.data
         }
     },

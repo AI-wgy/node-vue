@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     async fetch(){
-      const res = await this.$http.get('categories')
+      const res = await this.$http.get('rest/categories')
       this.items = res.data
     },
     //使用UI组件，构建删除按钮
@@ -40,7 +40,7 @@ export default {
         })
         .then(async () => {
           //定义一个res请求删除之后的接口
-          const res = await this.$http.delete(`categories/${row._id}`)   // eslint-disable-line no-unused-vars
+          const res = await this.$http.delete(`rest/categories/${row._id}`)   // eslint-disable-line no-unused-vars
           this.$message({
             type: 'success',
             message: '删除成功!'
