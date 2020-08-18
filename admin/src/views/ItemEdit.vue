@@ -7,7 +7,17 @@
                 <el-input v-focus v-model="model.name"></el-input>
             </el-form-item>
             <el-form-item label="图标">
-                <el-input v-model="model.icon"></el-input>
+                <!-- 图片的上传 action是一个上传的地址 成功之后返回一个数据给model.icon 先定义一个afterUpload
+                同时还要有一个上传的接口upload -->
+                <el-upload
+                    class="avatar-uploader"
+                    :action="$http.defaults.baseURL + '/upload' " 
+                    :show-file-list="false"
+                    :on-success="afterUpload"
+                >
+                    <img v-if="model.icon" :src="model.icon" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
             </el-form-item>
             <el-form-item>
                 <!-- 创建子分类，保存的时候数据应该存储在数据库里，需要在模型当中添加一个父级分类的字段
@@ -70,7 +80,15 @@ export default {
             //这边需要一个接口，到后端定义
             const res = await this.$http.get(`rest/items/${this.id}`)
             this.model = res.data
+        },
+
+        //定义上传图片之后,返回的一个数据
+        afterUpload(res){
+            //vue显示赋值
+            this.$set(this.model, 'icon', res.url)
+            // this.model.icon = res.url
         }
+ 
     },
     //跳转到编辑列表的时候，应该要显示一个分类的详情，不然不知道原来的值是什么，就不好进行下一步的编辑
     created(){
@@ -79,3 +97,30 @@ export default {
     }
 }   
 </script>
+
+
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+  }
+  .avatar {
+    width: 150px;
+    height: 150px;
+    display: block;
+  }
+</style>

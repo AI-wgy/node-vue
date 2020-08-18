@@ -10,6 +10,9 @@ app.use(require('cors')())
 require('./plugins/db/db')(app)
 require('./routes/admin')(app)
 
+//托管静态文件
+app.use('/uploads', express.static(__dirname + '/uploads'))
+
 app.listen(3000, () => {
     console.log('http://localhost:3000')
 })

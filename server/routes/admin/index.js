@@ -124,4 +124,16 @@ module.exports = app => {
 
         next()
     },router)
+
+    //获取上传的图片，因为express本身是获取不到上传图片的数据，需要创建一个中间件multer，专门用来处理上传数据的
+    //npm i multer
+    //dirname 表示当前文件所在的文件夹
+    const multer = require('multer')
+    const upload = multer({dest: __dirname + '/../../uploads' })
+    app.post('/admin/api/upload', upload.single('file'), async (req, res) => {
+        //本身express没有req.file 但是添加了upload这个中间件之后就有了
+        const file = req.file
+        file.url = `http://localhost:3000/uploads/${file.filename}`
+        res.send(file)
+    })
 }
