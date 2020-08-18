@@ -9,10 +9,10 @@ const schema = new mongoose.Schema({
 
     //英雄评分
     scores: {
-        difficult: {type: number },     //难度
-        skills: {type: number },        //技能
-        attack: {type: number },        //攻击
-        survive: {type: number },       //生存
+        difficult: {type: Number },     //难度
+        skills: {type: Number },        //技能
+        attack: {type: Number },        //攻击
+        survive: {type: Number },       //生存
     },
 
     //技能展示
@@ -24,8 +24,8 @@ const schema = new mongoose.Schema({
     }],
 
     //出装
-    items1:[{type: mongoose.SchemaTypes.ObjectId, ref: 'Ttem' }],       //顺风出装
-    items1:[{type: mongoose.SchemaTypes.ObjectId, ref: 'Ttem' }],       //逆风出装
+    items1:[{type: mongoose.SchemaTypes.ObjectId, ref: 'Item' }],       //顺风出装
+    items2:[{type: mongoose.SchemaTypes.ObjectId, ref: 'Item' }],       //逆风出装
 
     //使用技巧
     usageTips: { type: String },
