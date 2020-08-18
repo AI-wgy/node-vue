@@ -4,6 +4,8 @@ import VueRouter from 'vue-router'
 import Main from '../views/Main.vue'
 import CategoryEdit from '../views/CategoryEdit.vue'
 import CategoryList from '../views/CategoryList.vue'
+import ItemEdit from '../views/ItemEdit.vue'
+import ItemList from '../views/ItemList.vue'
 
 Vue.use(VueRouter)
 
@@ -26,6 +28,21 @@ Vue.use(VueRouter)
         //则在这个页面就可以直接使用这个变量id
         path: '/categories/edit/:id', 
         component: CategoryEdit ,
+        props: true
+      },
+
+      //装备物品
+      {
+        path: '/items/create', 
+        component: ItemEdit 
+      },
+      {
+        path: '/items/list', 
+        component: ItemList 
+      },
+      {
+        path: '/items/edit/:id', 
+        component: ItemEdit ,
         props: true
       }
     ]
