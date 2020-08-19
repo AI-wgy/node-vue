@@ -1,24 +1,47 @@
-<!-- 装备的创建 -->
+<!-- 分类的创建 -->
 <template>
     <div class="about">
-        <h1>{{id ? '编辑' : '新建' }}物品</h1>
+        <h1>{{id ? '编辑' : '新建' }}广告位</h1>
         <el-form label-width="120px" @submit.native.prevent = "save">
             <el-form-item label="名称">
                 <el-input v-focus v-model="model.name"></el-input>
             </el-form-item>
-            <el-form-item label="图标">
-                <!-- 图片的上传 action是一个上传的地址 成功之后返回一个数据给model.icon 先定义一个afterUpload
-                同时还要有一个上传的接口upload -->
-                <el-upload
-                    class="avatar-uploader"
-                    :action="$http.defaults.baseURL + '/upload' " 
-                    :show-file-list="false"
-                    :on-success="afterUpload"
-                >
-                    <img v-if="model.icon" :src="model.icon" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
+
+
+            <el-form-item label="广告">
+                <el-button size="small" v-on:click="model.items.push({})">
+                    <i class="el-icon-plus"></i>添加广告
+                </el-button>
+                <el-row type="flex" style="flex-wrap: wrap">
+                    <!-- 宽度md12 -->
+                    <el-col :md="24" v-for="(item, index) in model.items" :key="index">
+                        <el-form-item label="跳转连接（URL）" style="margin-top: 0.5rem">
+                            <el-input v-model="item.url"></el-input>
+                        </el-form-item>
+                        <!--  -->
+                        <el-form-item label="图片" style="margin-top: 1rem ">
+                            <el-upload
+                                class="avatar-uploader"
+                                :action="$http.defaults.baseURL + '/upload' " 
+                                :show-file-list="false"
+                                :on-success="res => $set(item, 'image', res.url)"
+                            >
+                            <!-- on-success成功之后不再是afterUpload 需要重新定义一个  -->
+                                    
+                                <img v-if="item.image" :src="item.image" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload>
+                        </el-form-item>
+                        <!--  -->
+                        <el-form-item>
+                            <el-button size="small" type="danger" 
+                            @click="model.items.splice(index, 1)">删除</el-button>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
             </el-form-item>
+
+
             <el-form-item>
                 <!-- 创建子分类，保存的时候数据应该存储在数据库里，需要在模型当中添加一个父级分类的字段
                 否则即使添加了分类，数据也不会存在数据库里，子分类和父分类也没有任何的关联 -->
@@ -38,7 +61,9 @@ export default {
 
     data(){
         return{
-            model: {} 
+            model: {
+                items: []
+            } ,
         }
     },
 
@@ -59,17 +84,17 @@ export default {
             //当有ID的时候用put方法提交到另一个接口（去后端定义新的接口）
             let res    // eslint-disable-line no-unused-vars
             if (this.id){
-                res = await this.$http.put(`rest/items/${this.id}`, this.model)
+                res = await this.$http.put(`rest/ads/${this.id}`, this.model)
             } else {
-                res = await this.$http.post('rest/items', this.model)
+                res = await this.$http.post('rest/ads', this.model)
             }
             // console.log('save')
-            // this.$http.post('items', this.model)
+            // this.$http.post('ads', this.model)
             //一般在这后面用.then方法  这里可以尝试使用async/await方法，
             //同样返回的也是一个promise,就可以把异步回调函数的写法，改成类似同步的
 
             //创建完成后应该跳转到一个分页列表
-            this.$router.push('/items/list')
+            this.$router.push('/ads/list')
             //跳转之后提示一个
             this.$message({
                 type:'success',
@@ -78,17 +103,9 @@ export default {
         },
         async fetch(){
             //这边需要一个接口，到后端定义
-            const res = await this.$http.get(`rest/items/${this.id}`)
-            this.model = res.data
-        },
-
-        //定义上传图片之后,返回的一个数据
-        afterUpload(res){
-            //vue显示赋值
-            this.$set(this.model, 'icon', res.url)
-            // this.model.icon = res.url
+            const res = await this.$http.get(`rest/ads/${this.id}`)
+            this.model = Object.assign({}, this.model, res.data )
         }
- 
     },
     //跳转到编辑列表的时候，应该要显示一个分类的详情，不然不知道原来的值是什么，就不好进行下一步的编辑
     created(){
@@ -97,5 +114,3 @@ export default {
     }
 }   
 </script>
-
-
