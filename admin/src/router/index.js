@@ -12,6 +12,9 @@ import ItemList from '../views/ItemList.vue'
 import HeroEdit from '../views/HeroEdit.vue'
 import HeroList from '../views/HeroList.vue'
 
+import ArticleEdit from '../views/ArticleEdit.vue'
+import ArticleList from '../views/ArticleList.vue'
+
 Vue.use(VueRouter)
 
   const routes = [
@@ -36,7 +39,13 @@ Vue.use(VueRouter)
       //英雄
       { path: '/heroes/create', component: HeroEdit },
       { path: '/heroes/list', component: HeroList },
-      { path: '/heroes/edit/:id', component: HeroEdit , props: true }
+      { path: '/heroes/edit/:id', component: HeroEdit , props: true },
+
+      //文章
+      { path: '/articles/create', component: ArticleEdit },
+      { path: '/articles/list', component: ArticleList },
+      { path: '/articles/edit/:id', component: ArticleEdit , props: true }
+
     ]
   },
   

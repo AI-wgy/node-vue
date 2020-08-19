@@ -84,8 +84,9 @@
                         <el-input type="textarea" v-model="model.teamTips"></el-input>
                     </el-form-item>
                 </el-tab-pane>
+
                 <el-tab-pane label="技能" name="skills">
-                    <el-button v-on:click="model.skills.push({})">
+                    <el-button size="small" v-on:click="model.skills.push({})">
                         <i class="el-icon-plus"></i>添加技能
                     </el-button>
                     <el-row type="flex" style="flex-wrap: wrap">
@@ -100,8 +101,10 @@
                                     class="avatar-uploader"
                                     :action="$http.defaults.baseURL + '/upload' " 
                                     :show-file-list="false"
-                                    :on-success="afterUpload"
+                                    :on-success="res => $set(item, 'icon', res.url)"
                                 >
+                                <!-- on-success成功之后不再是afterUpload 需要重新定义一个  -->
+                                
                                     <img v-if="item.icon" :src="item.icon" class="avatar">
                                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                 </el-upload>
@@ -114,9 +117,15 @@
                             <el-form-item label="小提示">
                                 <el-input type="textarea" v-model="item.tips"></el-input>
                             </el-form-item>
+                            <!--  -->
+                            <el-form-item>
+                                <el-button size="small" type="danger" 
+                                @click="model.skills.splice(index, 1)">删除</el-button>
+                            </el-form-item>
                         </el-col>
                     </el-row>
                 </el-tab-pane>
+
             </el-tabs>
             
 
@@ -242,14 +251,14 @@ export default {
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 150px;
-    height: 150px;
-    line-height: 150px;
+    width: 5rem;
+    height: 5rem;
+    line-height: 5rem;
     text-align: center;
   }
   .avatar {
-    width: 150px;
-    height: 150px;
+    width: 5rem;
+    height: 5rem;
     display: block;
   }
 </style>
