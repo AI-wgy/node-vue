@@ -29,8 +29,14 @@ export default {
   },
 
   methods: {
-    login(){
-      console.log(this.model)
+    async login(){
+      const res = await this.$http.post('login', this.model)
+      localStorage.token = res.data.token   //页面关闭保留信息  sessionStorage 不保存
+      this.$router.push('/')
+      this.$message({
+        type: 'success' ,
+        message: '登陆成功'
+      })
     }
   }
 

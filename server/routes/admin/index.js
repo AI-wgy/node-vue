@@ -3,6 +3,8 @@
 //     //定义子路由，用于各种增删改查，并且绑定在app.use上
 //     const router = express.Router()
 
+// const AdminUser = require('../../models/AdminUser')
+
 //     const Category = require('../../models/Category')
 
 //     //保存创建分类接口
@@ -57,6 +59,12 @@
 module.exports = app => {
     const express = require('express')
     //定义子路由，用于各种增删改查，并且绑定在app.use上
+
+    // 需要安装一个jsonwebtoken模块
+    const jwt = require('jsonwebtoken')
+
+    const AdminUser = require('../../models/AdminUser')
+
     const router = express.Router({
         mergeParams: true
         //合并url参数
@@ -89,7 +97,19 @@ module.exports = app => {
     })
 
     //分类列表
-    router.get('/', async (req, res) => {
+    router.get('/', async(req, res, next) => {
+        //加一个中间件,校验用户是否登录
+        //获得请求头之后 切割 pop 选择数组pop最后一个元素
+        const token = String(req.headers.authorization || '').split(' ').pop()
+        
+        const {id} = jwt.verify(token, app.get('secret'))
+        //为了后续能继续使用，可以挂载到req上
+        req.user = await AdminUser.findById(id)
+        console.log(req.user)
+
+        await next()
+        
+    }, async (req, res) => {
         //parent这里同样也要修改，并不是每个地方都需要请求parent，所以应该有一个条件
         const queryOptions = {}
         if (req.Model.modelName === 'Category'){
@@ -135,5 +155,42 @@ module.exports = app => {
         const file = req.file
         file.url = `http://localhost:3000/uploads/${file.filename}`
         res.send(file)
+    })
+
+    //登录路由
+    app.post('/admin/api/login', async(req, res) => {
+        const {username, password} = req.body
+        //1.根据用户名找用户
+        // const AdminUser = require('../../models/AdminUser')
+        const user = await AdminUser.findOne({
+            username
+            //username:username
+        }).select('+password')  //强制取出password这个字段，以便用于下面的校验密码
+
+        if(!user){
+            return res.status(422).send({
+                message: '用户不存在'
+            })
+            //全局捕获这个信息，去到http.js
+        }
+        
+        //2.校验密码
+        //因为用的bcrypt加密的，所以这里引用这个模块校验
+        //compareSync(明文，密文) ，明文就是客服提交上来的密码；密文是我们管理在数据库的密码
+        const isValid = require('bcrypt').compareSync(password, user.password)
+        if (!isValid){
+            return res.status(422).send({
+                message:'密码错误'
+            })
+        }
+
+        //3.返回token
+        // // 需要安装一个jsonwebtoken模块
+        // const jwt = require('jsonwebtoken')
+        //生成一个token，参数一是要加密的放入token的一个数据，随机生成一个散列字符串提供客户端使用
+        //参数二，秘钥,在全局设置秘钥之后在这里直接get获取
+        const token = jwt.sign({ id: user._id },app.get('secret'))
+        res.send({token})
+
     })
 }

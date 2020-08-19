@@ -2,6 +2,9 @@ const express = require("express")
 
 const app = express()
 
+//全局设置秘钥
+app.set('secret','miyao')
+
 //async和await的中间件
 app.use(express.json())
 //跨域模块一起引进来
