@@ -11,7 +11,8 @@
                 同时还要有一个上传的接口upload -->
                 <el-upload
                     class="avatar-uploader"
-                    :action="$http.defaults.baseURL + '/upload' " 
+                    :action="uploadUrl" 
+                    :headers="getAuthHeaders()"
                     :show-file-list="false"
                     :on-success="afterUpload"
                 >
