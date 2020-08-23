@@ -27,6 +27,49 @@
         <span>收起</span>
       </div>
     </div>
+    <!-- 新闻资讯 卡片组件 -->
+    <div class="card bg-white p-3 mt-3">
+      <div class="card-header d-flex ai-center">
+        <i class="iconfont icon-menu1"></i>
+        <div class="fs-xl flex-1 px-2 text-left">新闻资讯</div>
+        <i class="iconfont icon-menu"></i>
+      </div>
+      <div class="card-body pt-3">
+        <div class="nav  jc-between">
+          <div class="nav-item active">
+            <div class="nav-link">热门</div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link">新闻</div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link">新闻</div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link">新闻</div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link">新闻</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <m-list-card icon="menu1" title="新闻资讯" :categories="newsCats">
+      <template #items="{category}">
+        <router-link 
+        tag="div"
+        :to="`/articles/${news._id}`"
+        class="py-2 fs-lg d-flex" 
+        v-for="(news, i) in category.newsList" :key="i">
+          <span class="text-info">[{{news.categoryName}}]</span>
+          <span class="px-2">|</span>
+          <span class="flex-1 text-dark-1 text-ellipsis pr-2">{{news.title}}</span>
+          <span class="text-grey-1 fs-sm">{{news.createdAt | date}}</span>
+        </router-link>
+      </template>
+    </m-list-card> -->
+
   </div>
 </template>
 
