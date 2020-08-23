@@ -1,0 +1,60 @@
+
+$colors: (
+    //当左边定义的名字跟右边颜色名字相同时，名字应该加上双引号
+    //为了统一这里都加上双引号
+    'primary': #db9e3f,
+    'info': #4b67af,
+    'danger': #791a15,
+    'blue-1': #1f3695,
+    'blue': #4394e4,
+    'white': #fff,
+    'white-1': #fcfcfc,
+    'white-2': #eceef0,
+    'light': #f9f9f9,
+    'light-1': #d4d9de,
+    'grey': #999,
+    'grey-1': #666,
+    'dark-1': #343440,
+    'dark': #222,
+    'black': #000,
+);
+$border-color: map-get($colors, 'light-1');
+
+$base-font-size: 1rem;
+$font-sizes: (
+    xxs: 0.6154, //8px
+    xs: 0.7692, //10px
+    sm: 0.9231, //12px
+    md: 1,  //13px
+    lg: 1.0769,  //14px
+    xl: 1.2308,  //16px
+);
+
+
+//当是flex布局的时候，jc表示水平布局；当是column布局，则是垂直方向
+$flex-jc: (
+    start: flex-start,
+    end: flex-end,
+    center: center,
+    between: sapce-between,
+    around: space-around,
+);
+//当是flex布局的时候，ai表示竖直布局；当是column布局，则是水平方向
+$flex-ai: (
+    start: flex-start,
+    end: flex-end,
+    center: center,
+    stretch: stretch,
+);
+
+$spacing-types: (m: margin, p: padding);
+$spacing-directions: (t: top, r: right, b: bottom, l: left);
+$spacing-base-sizes: 1rem;
+$spacing-sizes: (
+    0: 0, 
+    1: 0.25, 
+    2: 0.5, 
+    3: 1, 
+    4: 1.5, 
+    5: 3
+);
