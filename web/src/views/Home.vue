@@ -17,6 +17,7 @@
     <div class="nav-icons bg-white mt-3 text-center pt-3 text-dark-1">
       <div class="d-flex flex-wrap">
         <div class="nav-item mb-3" v-for="n in 10" :key="n">
+          <!-- 使用精灵图标，适用于彩色的图片/图标 ， 单色图标可以用字体图标，但是精灵图片增删改不好操作 -->
           <i class="sprite sprite-news"></i>
           <div class="py-2">爆料站</div>
         </div>
