@@ -28,32 +28,22 @@
       </div>
     </div>
     <!-- 新闻资讯 卡片组件 -->
-    <div class="card bg-white p-3 mt-3">
-      <div class="card-header d-flex ai-center">
-        <i class="iconfont icon-menu1"></i>
-        <div class="fs-xl flex-1 px-2 text-left">新闻资讯</div>
-        <i class="iconfont icon-menu"></i>
-      </div>
-      <div class="card-body pt-3">
-        <div class="nav  jc-between">
-          <div class="nav-item active">
-            <div class="nav-link">热门</div>
-          </div>
-          <div class="nav-item">
-            <div class="nav-link">新闻</div>
-          </div>
-          <div class="nav-item">
-            <div class="nav-link">新闻</div>
-          </div>
-          <div class="nav-item">
-            <div class="nav-link">新闻</div>
-          </div>
-          <div class="nav-item">
-            <div class="nav-link">新闻</div>
-          </div>
+
+    <m-list-card icon="menu1" title="新闻资讯" :categories="newsCats">
+      <!-- 在父组件不循环，直接拿到子组件里面循环器的功能  父子组件传值 -->
+      <template #items="{category}">
+        <div class="py-2" v-for="(news, i) in category.newsList" :key="i">
+          <span>[{{news.categoryName}}]</span>
+          <span>|</span>
+          <span>{{news.title}}</span>
+          <span>{{news.date}}</span>
         </div>
-      </div>
-    </div>
+      </template>
+      
+    </m-list-card>
+    <m-card icon="menu1" title="英雄列表"></m-card>
+    <m-card icon="menu1" title="精彩视频"></m-card>
+    <m-card icon="menu1" title="图文攻略"></m-card>
 
     <!-- <m-list-card icon="menu1" title="新闻资讯" :categories="newsCats">
       <template #items="{category}">
@@ -89,7 +79,50 @@ export default {
           disableOnInteraction: false, //手动滑动之后不打断播放
           delay: 2000
         }
-      }
+      },
+      newsCats: [
+        {
+          name: "热门",
+          // 创建新数组，有五个元素，每个元素填充一个空的对象，map遍历，替换成以下对象
+          newsList: new Array(5).fill({}).map(v => ({ 
+              categoryName: '公告',
+              title: '8月25全服不停机更新公告',
+              date: '08/24'
+          }))
+        },
+        {
+          name: "新闻",
+          newsList: new Array(5).fill({}).map(v => ({
+              categoryName: '新闻',
+              title: '8月25全服不停机更新公告',
+              date: '08/24'
+          }))
+        },
+        {
+          name: "新闻",
+          newsList: new Array(5).fill({}).map(v => ({
+              categoryName: '新闻',
+              title: '8月25全服不停机更新公告',
+              date: '08/24'
+          }))
+        },
+        {
+          name: "新闻",
+          newsList: new Array(5).fill({}).map(v => ({
+              categoryName: '新闻',
+              title: '8月25全服不停机更新公告',
+              date: '08/24'
+          }))
+        },
+        {
+          name: "新闻",
+          newsList: new Array(5).fill({}).map(v => ({
+              categoryName: '新闻',
+              title: '8月25全服不停机更新公告',
+              date: '08/24'
+          }))
+        },
+      ]
     };
   }
 }
