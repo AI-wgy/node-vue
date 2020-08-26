@@ -74,7 +74,7 @@
     </el-header>
     
     <el-main>
-      <router-view></router-view>
+      <router-view :key="$route.path"></router-view>
      
     </el-main>
   </el-container>
@@ -97,9 +97,9 @@
   export default {
     data() {
       const item = {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
+        date: '2020-08-12',
+        name: 'AI-wgy',
+        address: ''
       };
       return {
         tableData: Array(20).fill(item)

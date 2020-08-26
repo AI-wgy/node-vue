@@ -24,7 +24,7 @@ module.exports = app => {
 
     //删除分类接口
     router.delete('/:id', async (req, res) => {
-        const model = await req.Model.findByIdAndDelete(req.params.id, req.body)
+        await req.Model.findByIdAndDelete(req.params.id)
         res.send({
             success: true
         })
@@ -36,7 +36,7 @@ module.exports = app => {
         if (req.Model.modelName === 'Category'){
             queryOptions.populate = 'parent'
         }
-        const items = await req.Model.find().setOptions(queryOptions).limit(10)
+        const items = await req.Model.find().setOptions(queryOptions).limit(100)
         //populate表示关联取出什么东西，中间填一个字段，当数据库中又关联字段，想要查出这个字段就可以用populate
         res.send(items)
     })
@@ -98,7 +98,7 @@ module.exports = app => {
 
     //错误处理函数
     app.use(async (err, req, res, next) => {
-        res.status(err.statusCode || '').send({
+        res.status(err.statusCode || 500).send({
             message: err.message
         })
     })

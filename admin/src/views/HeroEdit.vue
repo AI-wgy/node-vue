@@ -5,9 +5,9 @@
         <el-form label-width="120px" @submit.native.prevent = "save">
             
             
-            <el-tabs type="border-card" value="skills">
+            <el-tabs type="border-card" value="basic">
 
-                <el-tab-pane label="基本信息">
+                <el-tab-pane label="基本信息" name="basic">
                     <el-form-item style="width:25em" label="名称">
                         <el-input v-focus v-model="model.name"></el-input>
                     </el-form-item>
@@ -18,15 +18,28 @@
                     同时还要有一个上传的接口upload -->
                         <el-upload
                             class="avatar-uploader"
-                            :action="$http.defaults.baseURL + '/upload' " 
+                            :action="uploadUrl"
+                            :headers="getAuthHeaders()" 
                             :show-file-list="false"
-                            :on-success="afterUpload"
+                            :on-success="res => $set(model, 'avatar', res.url)"
                         >
                             <img v-if="model.avatar" :src="model.avatar" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </el-form-item>
 
+                    <el-form-item label="Banner">
+                        <el-upload
+                            class="avatar-uploader"
+                            :action="uploadUrl"
+                            :headers="getAuthHeaders()"
+                            :show-file-list="false"
+                            :on-success="res => $set(model, 'banner', res.url)"
+                        >
+                            <img v-if="model.banner" :src="model.banner" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                    </el-form-item>
 
                     <el-form-item style="width:25em" label="称号">
                         <el-input v-model="model.title"></el-input>
@@ -59,7 +72,7 @@
                     </el-form-item>
 
                     <!-- 出装 -->
-                    <el-form-item label="顺风出装">
+                    <!-- <el-form-item label="顺风出装">
                         <el-select v-model="model.items1" multiple >
                             <el-option v-for="item of items" :label="item.name" 
                             :value="item._id" :key="item._id"></el-option>
@@ -70,7 +83,7 @@
                             <el-option v-for="item of items" :label="item.name" 
                             :value="item._id" :key="item._id"></el-option>
                         </el-select>
-                    </el-form-item>
+                    </el-form-item> -->
                     
 
                     <!-- 使用技巧、对抗技巧、团战思路，结构一样，都是文本样式 -->
@@ -99,7 +112,8 @@
                             <el-form-item label="图标">
                                 <el-upload
                                     class="avatar-uploader"
-                                    :action="$http.defaults.baseURL + '/upload' " 
+                                    :action="uploadUrl"
+                                    :headers="getAuthHeaders()" 
                                     :show-file-list="false"
                                     :on-success="res => $set(item, 'icon', res.url)"
                                 >
@@ -108,6 +122,14 @@
                                     <img v-if="item.icon" :src="item.icon" class="avatar">
                                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                 </el-upload>
+                            </el-form-item>
+                            <!--  -->
+                            <el-form-item label="冷却值">
+                                <el-input v-model="item.delay"></el-input>
+                            </el-form-item>
+                            <!--  -->
+                            <el-form-item label="消耗">
+                                <el-input v-model="item.cost"></el-input>
                             </el-form-item>
                             <!--  -->
                             <el-form-item label="描述">
@@ -122,6 +144,84 @@
                                 <el-button size="small" type="danger" 
                                 @click="model.skills.splice(index, 1)">删除</el-button>
                             </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-tab-pane>
+
+                <el-tab-pane label="最佳搭档" name="partners">
+                    <el-button size="small" @click="model.partners.push({})">
+                        <i class="el-icon-plus"></i> 添加英雄
+                    </el-button>
+                    <el-row type="flex" style="flex-wrap: wrap">
+                        <el-col :md="12" v-for="(item, i) in model.partners" :key="i">
+                        <el-form-item label="英雄">
+                            <el-select filterable v-model="item.hero">
+                                <el-option 
+                                v-for="hero in heroes"
+                                :key="hero._id"
+                                :value="hero._id"
+                                :label="hero.name"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="描述">
+                            <el-input v-model="item.description" type="textarea"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button size="small" type="danger" @click="model.partners.splice(i, 1)">删除</el-button>
+                        </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-tab-pane>
+
+                <el-tab-pane label="压制英雄" name="suppress">
+                    <el-button size="small" @click="model.suppress.push({})">
+                        <i class="el-icon-plus"></i> 添加英雄
+                    </el-button>
+                    <el-row type="flex" style="flex-wrap: wrap">
+                        <el-col :md="12" v-for="(item, i) in model.suppress" :key="i">
+                        <el-form-item label="英雄">
+                            <el-select filterable v-model="item.hero">
+                                <el-option 
+                                v-for="hero in heroes"
+                                :key="hero._id"
+                                :value="hero._id"
+                                :label="hero.name"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="描述">
+                            <el-input v-model="item.description" type="textarea"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button size="small" type="danger" @click="model.suppress.splice(i, 1)">删除</el-button>
+                        </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-tab-pane>
+
+                <el-tab-pane label="被压制英雄" name="crushed">
+                    <el-button size="small" @click="model.crushed.push({})">
+                        <i class="el-icon-plus"></i> 添加英雄
+                    </el-button>
+                    <el-row type="flex" style="flex-wrap: wrap">
+                        <el-col :md="12" v-for="(item, i) in model.crushed" :key="i">
+                        <el-form-item label="英雄">
+                            <el-select filterable v-model="item.hero">
+                                <el-option 
+                                v-for="hero in heroes"
+                                :key="hero._id"
+                                :value="hero._id"
+                                :label="hero.name"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="描述">
+                            <el-input v-model="item.description" type="textarea"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button size="small" type="danger" @click="model.crushed.splice(i, 1)">删除</el-button>
+                        </el-form-item>
                         </el-col>
                     </el-row>
                 </el-tab-pane>
@@ -146,21 +246,24 @@ export default {
         id: {}
     },
 
-    data(){
-        return{
-            categories: [],
-            model: {
-                scores: {
-                 difficult: 0 ,
-                 skills: 0 ,
-                 attack: 0 ,
-                 survive: 0
-                },
-                skills: []
-            } ,
-            items: []
+    data() {
+    return {
+      categories: [],
+    //   items: [],
+      heroes: [],
+      model: {
+        name: "",
+        avatar: "",
+        skills: [],
+        partners: [],
+        suppress: [],
+        crushed: [],
+        scores: {
+          difficult: 0
         }
-    },
+      }
+    };
+  },
 
     directives: {
         //注册一个局部自定义指令v-focus
@@ -189,7 +292,7 @@ export default {
             //同样返回的也是一个promise,就可以把异步回调函数的写法，改成类似同步的
 
             //创建完成后应该跳转到一个分页列表
-            this.$router.push('/heroes/list')
+            // this.$router.push('/heroes/list')
             //跳转之后提示一个
             this.$message({
                 type:'success',
@@ -213,15 +316,31 @@ export default {
             const res = await this.$http.get(`rest/items`)
             this.items = res.data
         },
+
+        async fetchHeroes(){
+            const res = await this.$http.get(`rest/heroes`)
+            this.heroes = res.data
+        },
+
+        // async fetchSuppress(){
+        //     const res = await this.$http.get(`rest/suppress`)
+        //     this.suppress = res.data
+        // },
+
+        // async fetchCrushed(){
+        //     const res = await this.$http.get(`rest/crushed`)
+        //     this.crushed = res.data
+        // },
+
         //fetch之后到下边的create请求
 
         //定义上传图片之后,返回的一个数据
-        afterUpload(res){
-            //vue显示赋值
-            this.$set(this.model, 'avatar', res.url)
-            //可以事先在model:{}里添加属性，值为空，就可以直接用下面的赋值方法
-            // this.model.avatar = res.url
-        }
+        // afterUpload(res){
+        //     //vue显示赋值
+        //     this.$set(this.model, 'avatar', res.url)
+        //     //可以事先在model:{}里添加属性，值为空，就可以直接用下面的赋值方法
+        //     // this.model.avatar = res.url
+        // }
  
     },
     //跳转到编辑列表的时候，应该要显示一个分类的详情，不然不知道原来的值是什么，就不好进行下一步的编辑
@@ -232,6 +351,12 @@ export default {
         this.fetchCategories()
 
         this.fetchItems()
+
+        this.fetchHeroes()
+
+        // this.fetchSuppress()
+
+        // this.fetchCrushed()
     }
 }   
 </script>

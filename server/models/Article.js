@@ -6,6 +6,8 @@ const schema = new mongoose.Schema({
     title: { type: String },         //文章标题
     body: { type: String }          //内容区
 
+},{
+    timestamps: true
 })
 
 module.exports = mongoose.model('Article',schema)

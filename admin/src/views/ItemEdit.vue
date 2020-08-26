@@ -14,7 +14,7 @@
                     :action="uploadUrl" 
                     :headers="getAuthHeaders()"
                     :show-file-list="false"
-                    :on-success="afterUpload"
+                    :on-success="res => $set(model, 'icon', res.url)"
                 >
                     <img v-if="model.icon" :src="model.icon" class="avatar">
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -84,11 +84,11 @@ export default {
         },
 
         //定义上传图片之后,返回的一个数据
-        afterUpload(res){
-            //vue显示赋值
-            this.$set(this.model, 'icon', res.url)
-            // this.model.icon = res.url
-        }
+        // afterUpload(res){
+        //     //vue显示赋值
+        //     this.$set(this.model, 'icon', res.url)
+        //     // this.model.icon = res.url
+        // }
  
     },
     //跳转到编辑列表的时候，应该要显示一个分类的详情，不然不知道原来的值是什么，就不好进行下一步的编辑

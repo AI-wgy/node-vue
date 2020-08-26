@@ -4,6 +4,7 @@ const schema = new mongoose.Schema({
 
     name: { type: String },         //英雄名称
     avatar: { type: String },       //英雄头像
+    banner: { type: String },       
     title: { type: String  },       //英雄称号
     categories: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],         //英雄分类
 
@@ -19,6 +20,8 @@ const schema = new mongoose.Schema({
     skills:[{
         icon: { type: String },             //技能图标
         name: { type: String },             //技能名字
+        delay: { type: String },            //冷却值
+        cost: { type: String },             //技能消耗
         description: { type: String },      //技能描述
         tips: { type: String },             //技能使用提示
     }],
@@ -41,8 +44,19 @@ const schema = new mongoose.Schema({
     partners:[{
         hero: { type: mongoose.SchemaTypes.ObjectId, ref: 'Hero' } ,
         description: { type: String }
-    }]
+    }],
 
+    //压制英雄
+    suppress: [{
+        hero: { type: mongoose.SchemaTypes.ObjectId, ref: 'Hero' } ,
+        description: { type: String }
+    }],
+
+    //被压制英雄
+    crushed: [{
+        hero: { type: mongoose.SchemaTypes.ObjectId, ref: 'Hero' } ,
+        description: { type: String }
+    }]
 })
 
-module.exports = mongoose.model('Hero',schema)
+module.exports = mongoose.model('Hero',schema, 'heroes')

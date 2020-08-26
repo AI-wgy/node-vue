@@ -27,45 +27,54 @@
         <span>收起</span>
       </div>
     </div>
-    <!-- 新闻资讯 卡片组件 -->
 
+    <!-- 新闻资讯 卡片组件 -->
     <m-list-card icon="menu1" title="新闻资讯" :categories="newsCats">
       <!-- 在父组件不循环，直接拿到子组件里面循环器的功能  父子组件传值 -->
       <template #items="{category}">
-        <div class="py-2" v-for="(news, i) in category.newsList" :key="i">
-          <span>[{{news.categoryName}}]</span>
-          <span>|</span>
-          <span>{{news.title}}</span>
-          <span>{{news.date}}</span>
-        </div>
-      </template>
-      
-    </m-list-card>
-    <m-card icon="menu1" title="英雄列表"></m-card>
-    <m-card icon="menu1" title="精彩视频"></m-card>
-    <m-card icon="menu1" title="图文攻略"></m-card>
-
-    <!-- <m-list-card icon="menu1" title="新闻资讯" :categories="newsCats">
-      <template #items="{category}">
-        <router-link 
+        <router-link
         tag="div"
         :to="`/articles/${news._id}`"
-        class="py-2 fs-lg d-flex" 
-        v-for="(news, i) in category.newsList" :key="i">
+        class="py-2 fs-lg d-flex" v-for="(news, i) in category.newsList" :key="i">
           <span class="text-info">[{{news.categoryName}}]</span>
           <span class="px-2">|</span>
           <span class="flex-1 text-dark-1 text-ellipsis pr-2">{{news.title}}</span>
           <span class="text-grey-1 fs-sm">{{news.createdAt | date}}</span>
         </router-link>
       </template>
-    </m-list-card> -->
+    </m-list-card>
+
+    <m-list-card icon="card-hero" title="英雄列表" :categories="heroCats">
+      <template #items="{category}">
+        <div class="d-flex flex-wrap" style="margin: 0 -0.5rem">
+          <router-link
+          tag="div"
+          :to="`/heroes/${hero._id}`"
+          class="p-2 text-center"
+          style="width:20%"
+          v-for="(hero, i) in category.heroList" :key="i">
+            <img :src="hero.avatar" alt="" class="w-100">
+            <div>{{hero.name}}</div>
+          </router-link>
+        </div>
+      </template>
+    </m-list-card>
+
+>
+    <m-card icon="menu1" title="精彩视频"></m-card>
+    <m-card icon="menu1" title="图文攻略"></m-card>
 
   </div>
 </template>
 
 <script>
-
+import dayjs from "dayjs";
 export default {
+  filters: {
+    date(val) {
+      return dayjs(val).format("MM/DD");
+    }
+  },
   data(){
     return {
       swiperOptions: {
@@ -80,51 +89,24 @@ export default {
           delay: 2000
         }
       },
-      newsCats: [
-        {
-          name: "热门",
-          // 创建新数组，有五个元素，每个元素填充一个空的对象，map遍历，替换成以下对象
-          newsList: new Array(5).fill({}).map(v => ({ 
-              categoryName: '公告',
-              title: '8月25全服不停机更新公告',
-              date: '08/24'
-          }))
-        },
-        {
-          name: "新闻",
-          newsList: new Array(5).fill({}).map(v => ({
-              categoryName: '新闻',
-              title: '8月25全服不停机更新公告',
-              date: '08/24'
-          }))
-        },
-        {
-          name: "新闻",
-          newsList: new Array(5).fill({}).map(v => ({
-              categoryName: '新闻',
-              title: '8月25全服不停机更新公告',
-              date: '08/24'
-          }))
-        },
-        {
-          name: "新闻",
-          newsList: new Array(5).fill({}).map(v => ({
-              categoryName: '新闻',
-              title: '8月25全服不停机更新公告',
-              date: '08/24'
-          }))
-        },
-        {
-          name: "新闻",
-          newsList: new Array(5).fill({}).map(v => ({
-              categoryName: '新闻',
-              title: '8月25全服不停机更新公告',
-              date: '08/24'
-          }))
-        },
-      ]
+      newsCats: [],
+      heroCats: []
     };
-  }
+  },
+  methods:{
+    async fetchNewsCats() {
+      const res = await this.$http.get("news/list");
+      this.newsCats = res.data;
+    },
+    async fetchHeroCats() {
+      const res = await this.$http.get("heroes/list");
+      this.heroCats = res.data;
+    }
+  },
+  created(){
+    this.fetchNewsCats();
+    this.fetchHeroCats();
+  },
 }
 </script>
 
